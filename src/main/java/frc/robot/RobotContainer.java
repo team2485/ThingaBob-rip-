@@ -40,7 +40,6 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final Turntable m_Turntable = new Turntable(() -> m_driverController.getLeftX());
   private final Arm m_Arm = new Arm();
-  private final CameraTurretFollow m_CameraTurretFollow = new CameraTurretFollow();
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -65,6 +64,7 @@ public class RobotContainer {
     // cancelling on release.
     m_driverController.b().onTrue(new InstantCommand( () -> m_Turntable.requestState(TurntableStates.StateZero)));
     m_driverController.a().onTrue(new InstantCommand( () -> m_Turntable.requestState(TurntableStates.StateJoystickDriven)));
+    m_driverController.povLeft().onTrue(new InstantCommand( () -> m_Turntable.requestState(TurntableStates.StateTrack)));
     m_driverController.x().onTrue(new InstantCommand( () -> m_Arm.requestState(ArmStates.StateMax)));
     //m_driverController.x()onTrue(m_Arm.setVoltage(1));
     m_driverController.y().onTrue(new InstantCommand( () -> m_Arm.requestState(ArmStates.StateIdle)));

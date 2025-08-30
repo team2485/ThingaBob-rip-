@@ -13,6 +13,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.function.FloatSupplier;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 
 public class Turntable extends SubsystemBase {
     
@@ -20,7 +21,8 @@ public class Turntable extends SubsystemBase {
     public enum TurntableStates{
 
         StateJoystickDriven,
-        StateZero
+        StateZero,
+        StateTrack
 
     }
     public TurntableStates currentState = TurntableStates.StateJoystickDriven;
@@ -30,9 +32,12 @@ public class Turntable extends SubsystemBase {
     private final TalonFX m_talon = new TalonFX(3,"rio");
     private PIDController controller = new PIDController(0.05, 0, 0.0001);
     public DoubleSupplier axisSupplier;
+    public final CameraTurretFollow m_CameraTurretFollow = new CameraTurretFollow();
 
     DoublePublisher voltagePub;
     DoublePublisher positionPub;
+    DoublePublisher targetPub;
+
 
     public Turntable(DoubleSupplier axisSupplier){
         this.axisSupplier = axisSupplier;
@@ -46,8 +51,8 @@ public class Turntable extends SubsystemBase {
             // kI adds n volts per second when the positional error is 1 rotation
             // kD outputs n volts when the velocity error is 1 rotation per second
         var slot0Configs = talonFXConfigs.Slot0;
-        slot0Configs.kP = 0.5;
-        slot0Configs.kI = 0;
+        slot0Configs.kP = 0.7;
+        slot0Configs.kI = 0.07;
         slot0Configs.kD = 0;
 
 
@@ -73,10 +78,13 @@ public class Turntable extends SubsystemBase {
         voltagePub = table.getDoubleTopic("voltage").publish();
 
         positionPub = table.getDoubleTopic("position").publish();
+        targetPub = table.getDoubleTopic("target").publish();
+
     }
 
     double voltage;
     double position;
+    double target; 
     // Publish values that are constantly increasing.
     
     
@@ -91,6 +99,19 @@ public class Turntable extends SubsystemBase {
                 m_talon.set(-axisSupplier.getAsDouble()*0.025);
                 if((position > 2.5 && -axisSupplier.getAsDouble() > 0) || (position < -2.5 && -axisSupplier.getAsDouble() < 0))
                     m_talon.set(0);
+                    System.out.println(position/5);
+                break;
+            case StateTrack:
+                double PowerTrack = controller.calculate((m_talon.getPosition().getValueAsDouble()), target);
+                if (m_CameraTurretFollow.getTargetVisible() == true)
+                {
+                    target = (position + (m_CameraTurretFollow.getAprilTagAngleRotations() *-5));
+                m_talon.set(PowerTrack);
+                }
+                else
+                {
+                    m_talon.set(PowerTrack);
+                }
                 break;
         }
 
@@ -100,6 +121,8 @@ public class Turntable extends SubsystemBase {
 
         positionPub.set(position);
         position = m_talon.getPosition().getValueAsDouble();
+        targetPub.set(position + (m_CameraTurretFollow.getAprilTagAngleRotations() *-5));
+
 
     }
 

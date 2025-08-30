@@ -10,11 +10,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CameraTurretFollow extends SubsystemBase{
     PhotonCamera camera = new PhotonCamera("cam1");
-
+    double Yaw;
+    boolean TV;
     @Override
     public void periodic() {
       // This method will be called once per scheduler run
-        boolean targetVisible = false;
+        TV = false;
 
         double targetYaw = 0.0;
 
@@ -28,10 +29,26 @@ public class CameraTurretFollow extends SubsystemBase{
             var result = results.get(results.size() - 1);
             if (result.hasTargets()) {
                 var target = result.getTargets().get(0);
+                Yaw = target.getYaw();
                 targetYaw = target.getYaw();
-                targetVisible = true;
+                TV = true;
                 System.out.println("Degrees:" + targetYaw + ", Radians:" + targetYaw/180 * Math.PI);
             }
         }
+    }
+
+    public boolean getTargetVisible()
+    {
+        return TV;
+    }
+
+    public double getAprilTagAngle()
+    {
+        return Yaw;
+    }
+
+    public double getAprilTagAngleRotations()
+    {
+        return Yaw/360;
     }
 }
