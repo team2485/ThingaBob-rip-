@@ -22,12 +22,11 @@ public class Turntable extends SubsystemBase {
 
         StateJoystickDriven,
         StateZero,
-        StateTrack
-
+        StateTrack,
+        StateSide
     }
     public TurntableStates currentState = TurntableStates.StateJoystickDriven;
     public TurntableStates requestedState = TurntableStates.StateJoystickDriven;
-
 
     private final TalonFX m_talon = new TalonFX(3,"rio");
     private PIDController controller = new PIDController(0.05, 0, 0.0001);
@@ -112,6 +111,11 @@ public class Turntable extends SubsystemBase {
                 {
                     m_talon.set(PowerTrack);
                 }
+                break;
+            case StateSide:
+                double legallyDistictPower = controller.calculate(m_talon.getPosition().getValueAsDouble(), -0.15);
+                m_talon.set(legallyDistictPower);
+                //we already had a power variable from stateZero so...legallyDistictPower
                 break;
         }
 

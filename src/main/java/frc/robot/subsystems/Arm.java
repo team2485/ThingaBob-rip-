@@ -22,6 +22,7 @@ public class Arm extends SubsystemBase {
         StateZero,
         StateIdle,
         StateMax,
+        StateTest,
         StateTrans
 
     }
@@ -96,6 +97,11 @@ public class Arm extends SubsystemBase {
                 desiredPosition = 0.769;
                 // m_talon.setVoltage(0.2);
                 break;
+            case StateTest:
+
+                desiredPosition = 0.4;
+                break;
+
             /*default:
                 desiredPosition = 0.2;
                 break;*/

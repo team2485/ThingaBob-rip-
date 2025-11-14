@@ -13,6 +13,10 @@ import frc.robot.subsystems.Turntable.TurntableStates;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.CameraTurretFollow;
 import frc.robot.subsystems.Arm.ArmStates;
+import frc.robot.subsystems.Dispenser;
+import frc.robot.subsystems.Dispenser.DispenserStates;
+import frc.robot.subsystems.Thingamabob.ThingamaStates;
+import frc.robot.subsystems.Thingamabob;
 
 import java.util.function.DoubleSupplier;
 
@@ -40,6 +44,8 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final Turntable m_Turntable = new Turntable(() -> m_driverController.getLeftX());
   private final Arm m_Arm = new Arm();
+  private final Thingamabob manager = new Thingamabob(m_Turntable, m_Arm);
+  private final Dispenser m_Dispenser = new Dispenser(m_Turntable, manager);
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -66,8 +72,10 @@ public class RobotContainer {
     m_driverController.a().onTrue(new InstantCommand( () -> m_Turntable.requestState(TurntableStates.StateJoystickDriven)));
     m_driverController.povLeft().onTrue(new InstantCommand( () -> m_Turntable.requestState(TurntableStates.StateTrack)));
     m_driverController.x().onTrue(new InstantCommand( () -> m_Arm.requestState(ArmStates.StateMax)));
-    //m_driverController.x()onTrue(m_Arm.setVoltage(1));
+    //m_driverController.povRight().onTrue(new InstantCommand( () -> m_Turntable.requestState(TurntableStates.StateTest)));
     m_driverController.y().onTrue(new InstantCommand( () -> m_Arm.requestState(ArmStates.StateIdle)));
+    m_driverController.rightTrigger().onTrue(new InstantCommand( () -> m_Dispenser.requestState(DispenserStates.StateDispense)));
+    m_driverController.rightBumper().onTrue(new InstantCommand( () -> manager.requestState(ThingamaStates.StateReloading)));
   }
 
   // @Override
