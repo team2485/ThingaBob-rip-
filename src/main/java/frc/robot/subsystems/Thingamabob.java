@@ -28,7 +28,6 @@ public class Thingamabob extends SubsystemBase {
 
     public Turntable referenceTurntable;
     public Arm referenceArm;
-    public Dispenser referenceDispenser;
     public boolean isReloadReady;
 
     public Thingamabob(Turntable referenceTurntable, Arm referenceArm){
@@ -42,7 +41,7 @@ public class Thingamabob extends SubsystemBase {
     public void periodic(){
         switch(currentState){
             case StateBusyDoingSomething:
-            isReloadReady = false;
+                isReloadReady = false;
                 break;
             case StateReloading:
                 if (Math.abs(referenceTurntable.position) >= 0.1) {

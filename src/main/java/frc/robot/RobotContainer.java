@@ -75,7 +75,7 @@ public class RobotContainer {
     //m_driverController.povRight().onTrue(new InstantCommand( () -> m_Turntable.requestState(TurntableStates.StateTest)));
     m_driverController.y().onTrue(new InstantCommand( () -> m_Arm.requestState(ArmStates.StateIdle)));
     m_driverController.rightTrigger().onTrue(new InstantCommand( () -> m_Dispenser.requestState(DispenserStates.StateDispense)));
-    m_driverController.rightBumper().onTrue(new InstantCommand( () -> manager.requestState(ThingamaStates.StateReloading)));
+    //m_driverController.rightBumper().onTrue(new InstantCommand( () -> manager.requestState(ThingamaStates.StateReloading)));
   }
 
   // @Override

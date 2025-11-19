@@ -46,14 +46,14 @@ public class Dispenser extends SubsystemBase
    
 
     public Dispenser(Turntable m_Turntable, Thingamabob referenceManager){
-       topMotor.setAngle(0);
+       topMotor.setAngle(90);
        bottomMotor.setAngle(0);
        this.m_Turntable = m_Turntable;
        this.referenceManager = referenceManager;
     }
 
     public void periodic(){
-        switch(requestedState){
+        switch(currentState){
             case StateClosed:
                 topPos = 0;
                 bottomPos = 0;
@@ -84,14 +84,16 @@ public class Dispenser extends SubsystemBase
                 }
                 break;
             }
+        currentState = requestedState;  
+        runControlLoop();
       }
-    //@Override
+
     public void runControlLoop()
     {
-        if(referenceManager.isReloadReady){
+        //if(referenceManager.isReloadReady){
             topMotor.setAngle(topPos);
             bottomMotor.setAngle(bottomPos);
-        }
+        //}
     }
    
  
