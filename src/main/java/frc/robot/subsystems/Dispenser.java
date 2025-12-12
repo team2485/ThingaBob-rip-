@@ -37,30 +37,30 @@ public class Dispenser extends SubsystemBase
     
     private final Servo topMotor = new Servo(0);
     private final Servo bottomMotor = new Servo(1);
-    private double topPos = 0;
+    private final Servo extraMotor = new Servo(9);
+    private double topPos = 90;
     private double bottomPos = 0;
     //private final Turntable m_Turntable = new Turntable(() -> {m_driverController.getLeftX()} ); //fix
 
     public Turntable m_Turntable;
-    public Thingamabob referenceManager;
    
 
-    public Dispenser(Turntable m_Turntable, Thingamabob referenceManager){
+    public Dispenser(Turntable m_Turntable){
        topMotor.setAngle(90);
        bottomMotor.setAngle(0);
+       extraMotor.setAngle(0);
        this.m_Turntable = m_Turntable;
-       this.referenceManager = referenceManager;
     }
 
     public void periodic(){
         switch(currentState){
             case StateClosed:
-                topPos = 0;
+                topPos = 90;
                 bottomPos = 0;
-                referenceManager.requestedState = Thingamabob.ThingamaStates.StateBusyDoingSomething;
+               
                 break;
             case StateDispense:
-                topPos = 0; 
+                topPos = 90; 
                 bottomPos = 90;
                 timer++;
                 if (timer >= 30){
@@ -71,7 +71,7 @@ public class Dispenser extends SubsystemBase
             case StateReload:
                 if(bottomMotor.getPosition()==0)
                 {
-                    topPos = 90;
+                    topPos = 0;
                 }
                 else
                 {

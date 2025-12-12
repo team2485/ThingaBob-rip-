@@ -91,7 +91,8 @@ public class Turntable extends SubsystemBase {
     public void periodic(){
         switch(currentState){
             case StateZero:
-                double power = controller.calculate(m_talon.getPosition().getValueAsDouble(), 0);
+                double power = controller.calculate(m_talon.getPosition().getValueAsDouble(), -0.167 
+                );
                 m_talon.set(power);
                 break;
             case StateJoystickDriven:

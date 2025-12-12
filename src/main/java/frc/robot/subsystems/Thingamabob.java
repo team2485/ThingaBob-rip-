@@ -28,11 +28,13 @@ public class Thingamabob extends SubsystemBase {
 
     public Turntable referenceTurntable;
     public Arm referenceArm;
+    public Dispenser referenceDispenser;
     public boolean isReloadReady;
 
-    public Thingamabob(Turntable referenceTurntable, Arm referenceArm){
+    public Thingamabob(Turntable referenceTurntable, Arm referenceArm, Dispenser referenceDispenser){
         this.referenceTurntable = referenceTurntable;
         this.referenceArm = referenceArm;
+        this.referenceDispenser = referenceDispenser;
         isReloadReady = false;
     }
     
@@ -49,9 +51,19 @@ public class Thingamabob extends SubsystemBase {
                     if (referenceArm.currentState == Arm.ArmStates.StateZero) {
                         referenceTurntable.requestedState = Turntable.TurntableStates.StateZero;
                         isReloadReady = true;
+                        if(referenceTurntable.currentState == Turntable.TurntableStates.StateZero){
+                            referenceDispenser.requestedState = Dispenser.DispenserStates.StateDispense;
+                            //System.out.println("Works Turntable");
+                            if(referenceDispenser.currentState == Dispenser.DispenserStates.StateDispense){
+                                referenceDispenser.requestedState = Dispenser.DispenserStates.StateReload;
+                                //System.out.println("Breaking");
+                                requestedState = ThingamaStates.StateBusyDoingSomething;
+                                break;
+                            }
+                        }
                     }
-                    break;
                 }
+                
                 else{
                     referenceTurntable.requestedState = Turntable.TurntableStates.StateSide;
                 }

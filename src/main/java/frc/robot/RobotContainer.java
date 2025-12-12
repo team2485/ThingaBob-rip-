@@ -44,8 +44,8 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final Turntable m_Turntable = new Turntable(() -> m_driverController.getLeftX());
   private final Arm m_Arm = new Arm();
-  private final Thingamabob manager = new Thingamabob(m_Turntable, m_Arm);
-  private final Dispenser m_Dispenser = new Dispenser(m_Turntable, manager);
+  private final Dispenser m_Dispenser = new Dispenser(m_Turntable);
+  private final Thingamabob manager = new Thingamabob(m_Turntable, m_Arm, m_Dispenser);
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -75,7 +75,7 @@ public class RobotContainer {
     //m_driverController.povRight().onTrue(new InstantCommand( () -> m_Turntable.requestState(TurntableStates.StateTest)));
     m_driverController.y().onTrue(new InstantCommand( () -> m_Arm.requestState(ArmStates.StateIdle)));
     m_driverController.rightTrigger().onTrue(new InstantCommand( () -> m_Dispenser.requestState(DispenserStates.StateDispense)));
-    //m_driverController.rightBumper().onTrue(new InstantCommand( () -> manager.requestState(ThingamaStates.StateReloading)));
+    m_driverController.rightBumper().onTrue(new InstantCommand( () -> manager.requestState(ThingamaStates.StateReloading)));
   }
 
   // @Override
